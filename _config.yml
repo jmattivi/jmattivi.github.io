@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Welcome to Jekyll!
 #
 # This config file is meant for settings that affect your entire site, values
@@ -81,49 +82,51 @@ social:
   type                   : # Person or Organization (defaults to Person)
   name                   : # If the user or organization name differs from the site's name
   links: # An array of links to social media profiles
+=======
+# Site wide configuration
+locale: en_US
+title: Random Notes on Automation and PowerShell
+title_separator: "-"
+name: Jon Mattivi
+description: >- # this means to ignore newlines until "baseurl:"
+  Automation and PowerShell
+url: http://jmattivi.github.io
+baseurl: "" # the subpath of your site, e.g. /blog
 
-# Analytics
-analytics:
-  provider               : false # false (default), "google", "google-universal", "custom"
-  google:
-    tracking_id          :
+# Build settings
+kramdown:
+  auto_ids: true
+  footnote_nr: 1
+  entity_output: as_char
+  toc_levels: 1..6
+  enable_coderay: false
+remote_theme: mmistakes/minimal-mistakes
+minimal_mistakes_skin: dark # "default", "air", "aqua", "contrast", "dark", "dirt", "neon", "mint", "plum" "sunrise"
+plugins:
+  - jekyll-feed
+  - jekyll-sitemap
+  - jekyll-gist
+  - jekyll-remote-theme
+>>>>>>> e31878f47964d5e27812276fd6c03ddc4648514d
 
-
-# Site Author
+#Site Author
 author:
-  name             : "Your Name"
-  avatar           : # path of avatar image, e.g. "/assets/images/bio-photo.jpg"
-  bio              : "I am an amazing person."
-  location         : "Somewhere"
-  email            :
-  uri              :
-  home             : # null (default), "absolute or relative url to link to author home"
-  bitbucket        :
-  codepen          :
-  dribbble         :
-  flickr           :
-  facebook         :
-  foursquare       :
-  github           :
-  gitlab           :
-  google_plus      :
-  keybase          :
-  instagram        :
-  lastfm           :
-  linkedin         : # "john-doe-12345678" (the last part of your profile url, e.g. https://www.linkedin.com/in/john-doe-12345678)
-  pinterest        :
-  soundcloud       :
-  stackoverflow    : # "123456/username" (the last part of your profile url, e.g. https://stackoverflow.com/users/123456/username)
-  steam            : # "steamId" (the last part of your profile url, e.g. https://steamcommunity.com/id/steamId/)
-  tumblr           :
-  twitter          :
-  vine             :
-  weibo            :
-  xing             :
-  youtube          : # "https://youtube.com/c/MichaelRoseDesign"
+  name: Jon Mattivi
+  avatar: /assets/images/bio.jpg
+  bio: "Systems Engineer working in the healthcare industry."
+  location: Danville, PA
+  github: jmattivi
+  linkedin: jonmattivi
+  google_plus: 104511119455541238503
+  twitter: jonmattivi
 
+#Analytics
+analytics:
+  provider: "google-universal"
+  google:
+    tracking_id: "UA-32504876-2"
 
-# Reading Files
+#Reading Files
 include:
   - .htaccess
   - _pages
@@ -159,6 +162,7 @@ keep_files:
 encoding: "utf-8"
 markdown_ext: "markdown,mkdown,mkdn,mkd,md"
 
+<<<<<<< HEAD
 
 # Conversion
 markdown: kramdown
@@ -249,6 +253,9 @@ compress_html:
 
 
 # Defaults
+=======
+#Defaults
+>>>>>>> e31878f47964d5e27812276fd6c03ddc4648514d
 defaults:
   # _posts
   - scope:
@@ -258,6 +265,18 @@ defaults:
       layout: single
       author_profile: true
       read_time: true
-      comments: # true
+      comments: true
       share: true
       related: true
+      header:
+        image: /assets/images/banner2.png
+  # _pages
+  - scope:
+      path: ""
+      type: pages
+    values:
+      layout: splash
+      author_profile: true
+      header:
+        image: /assets/images/banner2.png
+      
