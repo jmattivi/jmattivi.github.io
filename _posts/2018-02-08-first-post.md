@@ -1,7 +1,6 @@
 ---
 layout: single
-title: "Invoke-HelloWorld"
-comments: true
+title: "Hello World"
 ---
 
 This is my first post on GitHub Pages!!!!
