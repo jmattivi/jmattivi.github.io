@@ -1,7 +1,9 @@
 ---
-layout: page
+layout: splash
 title: "Archive"
 permalink: /archive/
+header:
+        image: /assets/images/banner2.png
 ---
 
 {% for post in site.posts %} {% unless post.draft %}
