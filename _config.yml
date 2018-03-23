@@ -110,19 +110,19 @@ author:
   flickr           :
   facebook         :
   foursquare       :
-  github           :
+  github           : "jmattivi"
   gitlab           :
-  google_plus      :
+  google_plus      : "104511119455541238503"
   keybase          :
   instagram        :
   lastfm           :
-  linkedin         : # "john-doe-12345678" (the last part of your profile url, e.g. https://www.linkedin.com/in/john-doe-12345678)
+  linkedin         : "jonmattivi" # "john-doe-12345678" (the last part of your profile url, e.g. https://www.linkedin.com/in/john-doe-12345678)
   pinterest        :
   soundcloud       :
   stackoverflow    : # "123456/username" (the last part of your profile url, e.g. https://stackoverflow.com/users/123456/username)
   steam            : # "steamId" (the last part of your profile url, e.g. https://steamcommunity.com/id/steamId/)
   tumblr           :
-  twitter          :
+  twitter          : "jonmattivi"
   vine             :
   weibo            :
   xing             :
@@ -266,3 +266,12 @@ defaults:
       comments: # true
       share: true
       related: true
+# _pages
+  - scope:
+      path: ""
+      type: pages
+    values:
+      layout: splash
+      author_profile: true
+      header:
+        image: /assets/images/banner2.png
