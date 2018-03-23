@@ -1,6 +1,6 @@
 ---
 layout: single
-title: "First Post!"
+title: "Hello World!!!!"
 ---
 
-This is my first post on GitHub Pages!!!!
+This is my first post on GitHub Pages!
