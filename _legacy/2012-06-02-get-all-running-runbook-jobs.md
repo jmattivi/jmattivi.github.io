@@ -2,7 +2,7 @@
 layout: single
 title: Get all Running Runbook Jobs
 date: '2012-06-02T04:27:00.001-07:00'
-author: Jon Mattivi
+modified_time: '2012-06-06T11:41:13.080-07:00'
 tags:
 - edm.guid
 - scorch
@@ -16,7 +16,6 @@ tags:
 - Orchestrator Web Service
 - orchestrator.svc
 - odata
-modified_time: '2012-06-06T11:41:13.080-07:00'
 blogger_id: tag:blogger.com,1999:blog-603465820850819373.post-3174606743280457125
 blogger_orig_url: http://jmattivi.blogspot.com/2012/06/get-all-running-runbook-jobs.html
 ---
