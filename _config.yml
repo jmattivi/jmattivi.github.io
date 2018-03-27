@@ -271,7 +271,7 @@ defaults:
       comments: true
       share: true
       related: true
-      #toc: true
+      toc: true
       #toc_label: "My Table of Contents"
 # _legacy
   - scope:
@@ -284,7 +284,7 @@ defaults:
       comments: true
       share: true
       related: true
-      #toc: true
+      toc: true
       #toc_label: "My Table of Contents"
 # _pages
   - scope:
