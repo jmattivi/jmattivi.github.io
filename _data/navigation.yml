@@ -4,7 +4,7 @@ main:
     url: /about/
   - title: "Archive"
     url: /year-archive/
-  - title: "Legacy Posts"
+  - title: "Blogger Posts"
     url: /legacy/
   # - title: "Sample Collections"
   #   url: /collection-archive/

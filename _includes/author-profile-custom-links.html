@@ -5,3 +5,15 @@
     </a>
   </li>
 -->
+
+<h3 itemprop="GitHub">My GitHub Repos</h3>
+<li>
+{% for repo in author.githubrepos %}
+<a href="https://github.com/jmattivi/{{ repo }}" class="author-social" target="_blank">
+    <i class="fab fa-fw fa-github"></i>{{ repo }}</a>
+{% endfor %}
+</li>
+
+<br>
+
+<script type="text/javascript" src="//rf.revolvermaps.com/0/0/4.js?i=50nwa9isa3o&amp;m=0&amp;h=128&amp;c=00fff6&amp;r=15" async="async"></script>

@@ -1,0 +1,28 @@
+---
+layout: post
+title: Flatten Multi-Valued Published Data - Part 1
+date: '2013-06-14T13:04:00.001-07:00'
+author: Jon Mattivi
+tags:
+- SQL
+- Standard Activities
+- Variables
+- Run .Net Script
+- filter
+- activity
+- System Center Orchestrator 2012
+- runbook
+- published data
+- Database
+- PowerShell
+- database query
+- Orchestrator
+- Integration Pack
+- query
+modified_time: '2013-06-14T13:04:10.941-07:00'
+thumbnail: http://4.bp.blogspot.com/-o9njMDsR4Ks/Ubt0HAmYMII/AAAAAAAAAFc/wvBwXhoqGWg/s72-c/RawResults.jpg
+blogger_id: tag:blogger.com,1999:blog-603465820850819373.post-8561691431609312948
+blogger_orig_url: http://jmattivi.blogspot.com/2013/06/flatten-multi-valued-published-data.html
+---
+
+This will probably be a two-part post.<br /><br />I recently made some enhancements to one of my scripts to take flattened published data and format it so that it's readable (while still flattened).<br /><br />A little background where this might apply....<br /><br />If you have many data values that need to be emailed out, it's not likely that you want to send an email for each value.&nbsp; Ideally, all of the values (filenames, database fields, etc.) would be emailed in a readable format in one email.<br /><br />I most often use this PowerShell script immediately after a Query Database activity that has published data flattened seperated by "__%__" (without quotes).&nbsp; The Query Database activity would read multiple rows from a database that meet specified criteria.&nbsp; This particular example uses the Standard Logging IP by Charles Joy.<br /><br />The published data passed into the Run .Net Script is the "Full line as string with fields separated by ';'".<br /><br />Ex. Table Query Results:<br /><div class="separator" style="clear: both; text-align: center;"><a href="http://4.bp.blogspot.com/-o9njMDsR4Ks/Ubt0HAmYMII/AAAAAAAAAFc/wvBwXhoqGWg/s1600/RawResults.jpg" imageanchor="1" style="clear: left; float: left; margin-bottom: 1em; margin-right: 1em;"><img border="0" src="http://4.bp.blogspot.com/-o9njMDsR4Ks/Ubt0HAmYMII/AAAAAAAAAFc/wvBwXhoqGWg/s1600/RawResults.jpg" /></a></div><br /><br /><br /><br /><br /><br /><br /><br /><br />Ex. Full line as string.... flattened with __%__ Published Data (not very pretty!)<br /><br />6/14/2013 3:46:02 PM;3 - Failure;Server4;ActivityName:&nbsp; Copy File From A to B;ErrorSummary:&nbsp; Access Denied__%__6/14/2013 3:44:25 PM;3 - Failure;Server3;ActivityName:&nbsp; Copy File From A to B;ErrorSummary:&nbsp; File Does Not Exist__%__6/14/2013 3:42:07 PM;4 - Completed;Server2;Copy Completed;__%__6/14/2013 3:41:05 PM;4 - Completed;Server1;Copy Completed;<br /><br />Posh Script to get the published data:<br /><div class="separator" style="clear: both; text-align: center;"><a href="http://4.bp.blogspot.com/-Nh85kSdgEe4/Ubt131nIhvI/AAAAAAAAAFs/HhFRiBLwKxs/s1600/Script.jpg" imageanchor="1" style="clear: left; float: left; margin-bottom: 1em; margin-right: 1em;"><img border="0" src="http://4.bp.blogspot.com/-Nh85kSdgEe4/Ubt131nIhvI/AAAAAAAAAFs/HhFRiBLwKxs/s1600/Script.jpg" /></a></div><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />The Run .Net Script activity also has the published data flattened, but with line breaks.&nbsp; The table variable would then be sent in the email.<br /><br />Ex.<br />6/14/2013 3:46:02 PM<br />3 - Failure<br />Server4<br />ActivityName:&nbsp; Copy File From A to B<br />ErrorSummary:&nbsp; Access Denied<br /><br />6/14/2013 3:44:25 PM<br />3 - Failure<br />Server3<br />ActivityName:&nbsp; Copy File From A to B<br />ErrorSummary:&nbsp; File Does Not Exist<br /><br />6/14/2013 3:42:07 PM<br />4 - Completed<br />Server2<br />Copy Completed<br /><br />6/14/2013 3:41:05 PM<br />4 - Completed<br />Server1<br />Copy Completed<br /><br /><br />#######################################################################<br />$table = @()<br /><br />$RawFailures = @'<br />&lt;Published Data seperated by __%__&gt;<br />'@<br /><br />$Regex = [regex] '/*__%__'<br />$Failures = $Regex.Split("$RawFailures")<br />ForEach($Data in $Failures)<br />&nbsp;&nbsp;&nbsp; {<br />&nbsp;&nbsp;&nbsp; If ($Data.Split(";")[0].Length -ne 0) {<br />&nbsp;&nbsp;&nbsp; $Field1 = $Data.Split(";")[0]}<br />&nbsp;&nbsp;&nbsp; Else {$Field1 = $null}<br />&nbsp;&nbsp;&nbsp; If ($Data.Split(";")[1].Length -ne 0) {<br />&nbsp;&nbsp;&nbsp; $Field2 = $Data.Split(";")[1]}<br />&nbsp;&nbsp;&nbsp; Else {$Field2 = $null}<br />&nbsp;&nbsp;&nbsp; If ($Data.Split(";")[2].Length -ne 0) {<br />&nbsp;&nbsp;&nbsp; $Field3= $Data.Split(";")[2]}<br />&nbsp;&nbsp;&nbsp; Else {$Field3 = $null}<br />&nbsp;&nbsp;&nbsp; If ($Data.Split(";")[3].Length -ne 0) {<br />&nbsp;&nbsp;&nbsp; $Field4= $Data.Split(";")[3]}<br />&nbsp;&nbsp;&nbsp; Else {$Field4 = $null}<br />&nbsp;&nbsp;&nbsp; If ($Data.Split(";")[4].Length -ne 0) {<br />&nbsp;&nbsp;&nbsp; $Field5= $Data.Split(";")[4]}<br />&nbsp;&nbsp;&nbsp; Else {$Field5 = $null}<br /><br />&nbsp;&nbsp;&nbsp; IF ($Data.Length -ne 0) {<br />&nbsp;&nbsp;&nbsp; $table += $Field1, $Field2, $Field3, $Field4, $Field5, ""<br />&nbsp;&nbsp;&nbsp; }<br />&nbsp;&nbsp;&nbsp; }<br />&nbsp;&nbsp;&nbsp; <br />$table = @($table | Where-Object {$_ -ne $null})<br />#######################################################################

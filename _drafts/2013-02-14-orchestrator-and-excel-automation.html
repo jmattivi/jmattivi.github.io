@@ -1,0 +1,23 @@
+---
+layout: post
+title: Orchestrator and Excel Automation
+date: '2013-02-14T09:15:00.002-08:00'
+author: Jon Mattivi
+tags:
+- PowerShell
+- Standard Activities
+- Run .Net Script
+- Office
+- Orchestrator
+- scorch
+- activity
+- Excel
+- System Center Orchestrator 2012
+- Integration Pack
+- Server 2008
+modified_time: '2013-02-14T09:15:59.160-08:00'
+blogger_id: tag:blogger.com,1999:blog-603465820850819373.post-1936830242987845580
+blogger_orig_url: http://jmattivi.blogspot.com/2013/02/orchestrator-and-excel-automation.html
+---
+
+I figured I'd throw this out here in case anyone is looking to automate Excel tasks through Orchestrator and PowerShell and running into issues.&nbsp; I was tasked with modifying an Excel file (removing worksheets and saving as a csv file) in SCOrch as part of a workflow prior to processing the file.<br /><br />I used the PowerShell script below in the Run .Net Script activity.<br /><br /><u><b>Script</b></u><br />#Remove Worksheets<br />$objExcel = new-object -Com Excel.Application <br />$xlFixedFormat = [Microsoft.Office.Interop.Excel.XlFileFormat]::xlWorkbookDefault<br />$objExcel.Visible = $false<br />$objExcel.displayalerts = $false<br />$objWorkbook = $objExcel.Workbooks.Open("\\PathtoMyFile\MyFile.xlsx") <br />$objWorksheets = $objWorkbook.Worksheets | Where {($_.Name -ne "Data")}<br />If ($objWorksheets) {<br />&nbsp;&nbsp; &nbsp;ForEach ($objWorksheet in $objWorksheets) {<br />&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;$objWorksheet.Delete()<br />&nbsp;&nbsp; &nbsp;}<br />}<br />$objWorkbook.Save()<br />$objExcel.Workbooks.Close()<br />$objExcel.quit()<br />[System.Runtime.Interopservices.Marshal]::ReleaseComObject($objExcel)<br />[System.Runtime.Interopservices.Marshal]::ReleaseComObject($objWorkbook)<br />Remove-Variable objExcel<br />Remove-Variable objWorkbook<br /><br />Running this script manually on the runbook server worked fine and as expected.&nbsp; However, running the script in SCOrch throws the following error (or similar error with opening the file).<br /><br /><u><b>Error</b></u><br />Exception calling "Open" with "1" argument(s): "Microsoft Excel cannot access the file '\\PathtoMyFile\MyFile.xlsx'. There are several possible reasons:<br /><br />• The file name or path does not exist.<br />• The file is being used by another program.<br />• The workbook you are trying to save has the same name as a currently open workbook."<br /><br /><br />To solve this issue, create an empty folder called "Desktop" under the systemprofile folder as shown below:<br /><br /><pre><span style="font-family: inherit;">C:\Windows\SysWOW64\config\systemprofile\Desktop</span></pre><pre><span style="font-family: inherit;">C:\Windows\System32\config\systemprofile\Desktop </span></pre>

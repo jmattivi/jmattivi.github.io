@@ -1,0 +1,24 @@
+---
+layout: post
+title: Workflow to Stop all Runbook Jobs
+date: '2012-06-02T04:30:00.000-07:00'
+author: Jon Mattivi
+tags:
+- Stop Runbook
+- scorch
+- System Center Orchestrator 2012
+- filter runbooks
+- PowerShell
+- workflows
+- Orchestrator
+- GET Request
+- Orchestrator Web Service
+- xml
+- Cancel Runbook
+- odata
+modified_time: '2012-06-08T09:50:53.735-07:00'
+blogger_id: tag:blogger.com,1999:blog-603465820850819373.post-5694598967019423485
+blogger_orig_url: http://jmattivi.blogspot.com/2012/06/workflow-to-stop-all-runbook-jobs.html
+---
+
+There's not a lot I miss about the Opalis Operator Console compared to the new Orchestration Console….however, there was one feature that is not present in the new OC.&nbsp; That is the ability to stop all Runbook Jobs.&nbsp; Whenever there's maintenance that needs to be done to the runbook servers or database, to prevent creating orphaned jobs, all running/pending jobs need to be stopped.<br /><br />This is a job for the new web service and powershell!&nbsp; In my previous posts, I showed how to query runbooks that have a status of running or pending and how to stop/cancel a runbook job.&nbsp; This ties them together creating a workflow right in Orchestrator using a combination of the two to stop all running and pending jobs.<br /><br />The runbook below queries jobs with a status of running and then invokes the runbook which actually stops the job.&nbsp; The query returns the necessary properties of the runbook to pass to the stopping job – jobID, RunbookID, and LastModifiedTime.&nbsp; I have another similar runbook that runs in parallel that queries for pending jobs and calls the same stopping runbook.&nbsp; These runbooks will loop until the total running/pending jobs = 0.<br /><br /><span style="background-color: red;">Be sure to exclude the runbooks that are running this workflow from the query or this runbook will stop itself</span> :) .&nbsp; Here is an example of the url in the query script to exclude the runbookIDs of the runbooks which run the workflow.<br /><br />$url = "https://scorch.domain:81/Orchestrator2012/Orchestrator.svc/Jobs()?`$filter=Status eq 'Running' and <span style="color: red;">RunbookId ne guid'10000000-0000-0000-0000-000000000000' and RunbookId ne guid'20000000-0000-0000-0000-000000000000' and RunbookId ne guid'30000000-0000-0000-0000-000000000000'</span>&amp;`$select=Id,RunbookId,LastModifiedTime,Status"<br /><br /><img alt="" class="alignnone  wp-image-52" height="165" src="http://jmattivi.files.wordpress.com/2012/01/runbook1.png?w=381&amp;h=165" title="Runbook1" width="381" />Figure A<br /><br /><img alt="" height="224" src="http://jmattivi.files.wordpress.com/2012/01/runbook2.png?w=358&amp;h=224" title="Runbook2" width="358" />Figure B <br /><br />In Figure A, I reset a counter and then run the powershell script to query for running jobs.&nbsp; For every running job it finds, it then increments a counter and invokes the stop jobs runbook.&nbsp; I also decrement the same counter in Figure B so that we know every runbook found was processed successfully.&nbsp; After the junction, we check to make sure the counter was decremented back to 0.&nbsp; Then we query for any running jobs again and publish that back to the main runbook that will loop until that is 0.<br /><br />In Figure B, I implement the Standard Logging IP by Charles Joy to log the stopping script.&nbsp; This will allow parsing the table for failures and reporting at the end.&nbsp; As mentioned above, on success or failure, I decrement the counter again to ensure the running job was processed.<br /><br />Now with one click to start a runbook, you can stop all runbook jobs again!&nbsp; I had to come up with another workflow to automate starting all necessary jobs again that run with a Monitor Date/Time activity from a Sharepoint list….but that’ll be saved for the next post.

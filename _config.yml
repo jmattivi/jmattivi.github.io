@@ -127,6 +127,14 @@ author:
   weibo            :
   xing             :
   youtube          : # "https://youtube.com/c/MichaelRoseDesign"
+  #Github repos in sidebar - match them up to the repository name...
+  githubrepos      : [
+                     "Orchestrator",
+                     "PSConfigMgr",
+                     "PSHoneywellThermostat",
+                     "PSSFTP",
+                     "PSSSH"
+                     ]
 
 
 # Reading Files

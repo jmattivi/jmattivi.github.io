@@ -1,0 +1,26 @@
+---
+layout: post
+title: 'Schedule Activity:  First Business Day of the Month'
+date: '2013-04-26T06:42:00.001-07:00'
+author: Jon Mattivi
+tags:
+- Standard Activities
+- Run .Net Script
+- schedule
+- scorch
+- activity
+- IP
+- System Center Orchestrator 2012
+- Orchestrator 2012
+- published data
+- Invoke Runbook
+- PowerShell
+- Integration Pack
+- Monitor Date/Time
+modified_time: '2013-04-26T06:43:31.466-07:00'
+thumbnail: http://2.bp.blogspot.com/-bju8OB6uxWs/UXqCdEBBgcI/AAAAAAAAAEk/Waq8UjYYfpU/s72-c/runbook.jpg
+blogger_id: tag:blogger.com,1999:blog-603465820850819373.post-8858472726745167403
+blogger_orig_url: http://jmattivi.blogspot.com/2013/04/schedule-workaround-first-business-day.html
+---
+
+Maybe this is more straightforward than I originally thought it was....sometimes I tend to over think and complicate things than they actually are.&nbsp; So just in case someone else finds this helpful.... :)<br /><br />I recently got a request for a workflow to run on the 1st calendar day of the month or first business day if the 1st fell on a weekend.&nbsp; I first though that it wasn't possible to do with the native scheduling and PowerShell was needed.&nbsp; After I wrote up a Posh script to do the heavy lifting, it dawned on me how to use the native schedule activity.&nbsp; It's not as straight forward as using the script, but does work.<br /><br />Orchestrator's built-in schedule activity supports two options:<br />1)&nbsp; Specifying the calendar day(s) of the month to run<br /><br />2)&nbsp; Specifying the week day to run<br /><br />Here is the "main" runbook for the schedule that will invoke the rest of the workflow.&nbsp; It requires four different schedule activities to accomplish the logic.&nbsp; Each of the following links (green) have the logic "confirms to schedule equal to true".<br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://2.bp.blogspot.com/-bju8OB6uxWs/UXqCdEBBgcI/AAAAAAAAAEk/Waq8UjYYfpU/s1600/runbook.jpg" imageanchor="1" style="clear: left; float: left; margin-bottom: 1em; margin-right: 1em;"><img border="0" height="199" src="http://2.bp.blogspot.com/-bju8OB6uxWs/UXqCdEBBgcI/AAAAAAAAAEk/Waq8UjYYfpU/s320/runbook.jpg" width="320" /></a></div><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />Here is the PowerShell script to accomplish the same schedule result.&nbsp; The "$Success" variable would be in the Published Data to use in the link logic to continue or not if Success equals true.<br /><br />$DayOfWeek = [DateTime]::Now.DayOfWeek<br />$DayOfMonth = [DateTime]::Now.Day<br /><br />If (&nbsp; (($dayOfMonth -eq 1) -and ($dayOfWeek -ge [DayOfWeek]::Monday) -and ($dayOfWeek -le [DayOfWeek]::Friday)) -or ((($dayOfMonth -eq 2) -or ($dayOfMonth -eq 3)) -and ($dayOfWeek -eq [DayOfWeek]::Monday))&nbsp; )<br />{<br />&nbsp;&nbsp;&nbsp; $Success = $true&nbsp;&nbsp;&nbsp; <br />}<br />Else {<br />&nbsp;&nbsp;&nbsp; $Success = $false<br />}<br /><div class="separator" style="clear: both; text-align: center;"></div>

@@ -1,0 +1,24 @@
+---
+layout: post
+title: 'Run .NET Script:  Catching PowerShell Output Into the Current Session'
+date: '2012-11-21T12:38:00.000-08:00'
+author: Jon Mattivi
+tags:
+- Variables
+- Run .Net Script
+- activity
+- System Center Orchestrator 2012
+- runbook
+- System Center Orchestrator
+- published data
+- PowerShell
+- workflows
+- web service
+- Integration Pack
+- Orchestration Console
+modified_time: '2012-11-22T05:25:53.438-08:00'
+blogger_id: tag:blogger.com,1999:blog-603465820850819373.post-4205257658433812507
+blogger_orig_url: http://jmattivi.blogspot.com/2012/11/catching-powershell-output-into-current.html
+---
+
+Here is a handy tip for catching PowerShell output into a variable as Published Data. <br /><br />There are often times you need to execute a cmd within PowerShell that creates output in the cmd's output, but not PowerShell.<br /><br />I came across a similar issue on the technet forums.<br /><a href="http://social.technet.microsoft.com/Forums/en-US/scogeneral/thread/a9511617-c174-4a5b-a531-3110471c9222" target="_blank">http://social.technet.microsoft.com/Forums/en-US/scogeneral/thread/a9511617-c174-4a5b-a531-3110471c9222 </a><br /><br />For example....<br /><br />Running w/ PowerShell in the Run .NET Script activity cannot catch the output of the winrs cmd.&nbsp; Even w/ adding the $Output = ... and adding the Output variable to published data.<br /><br />$Output = winrs -r:<b><i>server_name</i></b> -u:<b><i>server_name</i></b>\administrator -p <b><i>password</i></b> net localgroup Administrators <b><i>Domain</i></b>\<b><i>User</i></b> /ADD<br /><br />This will result in the Output variable in the published data being empty. <br /><br />The trick is simply adding "2&gt;&amp;1" (without quotes) at the end of the cmd.&nbsp; So the complete command would look like this.<br /><br />&nbsp;$Output = winrs -r:<b><i>server_name</i></b> -u:<b><i>server_name</i></b>\administrator -p <b><i>password</i></b> net localgroup Administrators <b><i>Domain</i></b>\<b><i>User</i></b> /ADD 2&gt;&amp;1<br /><br />This will result in the $Output variable catching the result from winrs into the published data.&nbsp; Also note, you may have to Flatten the data since the result may end up in multiple lines. <br /><br /><img alt="" src="http://social.technet.microsoft.com/Forums/getfile/197589" /> <br /><br /><br />Here is a link that explains different methods for catching output in PowerShell.<br /><a href="http://mctexpert.blogspot.com/2010/11/what-does-2-mean-in-powershell.html">http://mctexpert.blogspot.com/2010/11/what-does-2-mean-in-powershell.html</a>

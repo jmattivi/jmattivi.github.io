@@ -1,0 +1,26 @@
+---
+layout: post
+title: Orchestrator Runbook Migrations - Invoke by path Property
+date: '2012-12-04T13:31:00.000-08:00'
+author: Jon Mattivi
+tags:
+- invoke
+- scorch
+- activity
+- Runbook Path
+- System Center Orchestrator 2012
+- Orchestrator 2012
+- runbook
+- Database
+- guid
+- Invoke Runbook
+- workflows
+- database query
+- Parameter
+- query
+modified_time: '2012-12-04T13:31:39.949-08:00'
+blogger_id: tag:blogger.com,1999:blog-603465820850819373.post-534873827470505444
+blogger_orig_url: http://jmattivi.blogspot.com/2012/12/orchestrator-runbook-migrations-invoke.html
+---
+
+<b>****The following process is not supported by Microsoft!&nbsp; This directly updates data in the Orchestrator database!&nbsp; Use at your own risk!**** </b><br /><br /><br />While migrating policies from Opalis to Orchestrator or between Orchestrator environments, you may run into the issue where Invoke Runbook activities magically get updated w/ the "Invoke by path" property set to True (or checked).<br /><br />This occurs when a runbook targets another runbook that was not included in the export file.&nbsp; Orchestrator attempts to keep the relationship chain by specifying the path to the target runbook since the runbook id guid is no longer valid.<br /><br />To find all active Invoke Runbook activities that have this property set to true, you can execute the following SQL query to identify them.<br /><br />The first query will group the target runbooks so you know how many are affected (we'll use these individual values later....). <br /><br /><br />Select TRIGGER_POLICY.PolicyPath AS TargetRunbookPath<br />From TRIGGER_POLICY<br />INNER JOIN OBJECTS ON TRIGGER_POLICY.UniqueID = OBJECTS.UniqueID<br />INNER JOIN POLICIES ON OBJECTS.ParentID = POLICIES.UniqueID<br />Where TRIGGER_POLICY.TriggerByPolicyPath != 0 and OBJECTS.Deleted != 1 and POLICIES.Deleted != 1<br />Group By TRIGGER_POLICY.PolicyPath<br />Order By TRIGGER_POLICY.PolicyPath<br /><br /><br /><br /><br />Select POLICIES.UniqueID, POLICIES.Name AS SourceRunbook, TRIGGER_POLICY.PolicyObjectID AS TargetRunbookID, TRIGGER_POLICY.PolicyPath AS TargetRunbookPath, TRIGGER_POLICY.TriggerByPolicyPath, TRIGGER_POLICY.TargetActionServers<br />From TRIGGER_POLICY<br />INNER JOIN OBJECTS ON TRIGGER_POLICY.UniqueID = OBJECTS.UniqueID<br />INNER JOIN POLICIES ON OBJECTS.ParentID = POLICIES.UniqueID<br />Where TRIGGER_POLICY.TriggerByPolicyPath != 0 and OBJECTS.Deleted != 1 and POLICIES.Deleted != 1<br />Order By TRIGGER_POLICY.PolicyPath<br /><br /><br />Now if you have a loooot of individual activities that have this property set (shown from the 2nd query above), you can update to update them by target runbook in mass rather than tediously going to each and every activity and updating the target runbook, unchecking the invoke by path property, and updating any parameters if applicable.<br /><br />From the first query above, you can copy the target runbook name and paste it into the highlighted section below.<br /><br />**Note the query below will only <span style="background-color: lime;">SELECT </span>the rows that will be ultimately updated.&nbsp; You'll need to comment out the 'Select' line and remove the comments from the 'Update', and two Set cmds.<br /><br /><br />Declare @TargetPath varchar(250)<br />Declare @UpdatedID varchar(250)<br /><br />Set @TargetPath = '<span style="background-color: yellow;">Policies\Path_To_Runbook</span>'<br />Set @UpdatedID = (Select '{' + CAST(Resources.UniqueId as varchar(250)) + '}'<br />&nbsp;&nbsp; &nbsp;From [Microsoft.SystemCenter.Orchestrator.Internal].Resources AS Resources<br />&nbsp;&nbsp; &nbsp;Where Resources.Path = SUBSTRING(@TargetPath,CHARINDEX('\Globals',@TargetPath,0),len(@TargetPath)))<br /><br /><br />Select POLICIES.UniqueID, POLICIES.Name, @UpdatedID, TRIGGER_POLICY.PolicyPath, TRIGGER_POLICY.TriggerByPolicyPath<br />--Update TRIGGER_POLICY<br />--Set TRIGGER_POLICY.PolicyObjectID = @UpdatedID<br />-- &nbsp;&nbsp; ,TRIGGER_POLICY.TriggerByPolicyPath = 0<br />From TRIGGER_POLICY<br />INNER JOIN OBJECTS ON TRIGGER_POLICY.UniqueID = OBJECTS.UniqueID<br />INNER JOIN POLICIES ON OBJECTS.ParentID = POLICIES.UniqueID<br />Where TRIGGER_POLICY.TriggerByPolicyPath != 0 and OBJECTS.Deleted != 1 and POLICIES.Deleted != 1 and TRIGGER_POLICY.PolicyPath = @TargetPath<br /><br /><br />

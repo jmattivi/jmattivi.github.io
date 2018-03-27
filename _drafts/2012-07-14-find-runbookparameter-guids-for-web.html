@@ -1,0 +1,26 @@
+---
+layout: post
+title: Find Runbook/Parameter GUIDs for Web Service POST
+date: '2012-07-14T19:21:00.001-07:00'
+author: Jon Mattivi
+tags:
+- SQL
+- edm.guid
+- invoke
+- scorch
+- runbook
+- System Center Orchestrator
+- guid
+- PowerShell
+- database query
+- Orchestrator
+- Orchestrator Web Service
+- Parameter
+- web service
+- query
+modified_time: '2012-07-17T04:21:57.375-07:00'
+blogger_id: tag:blogger.com,1999:blog-603465820850819373.post-7920615211360282452
+blogger_orig_url: http://jmattivi.blogspot.com/2012/07/find-runbookparameter-guids-for-web.html
+---
+
+I sometimes find it redundant looking up the runbook and parameter guids when creating a new powershell script to invoke a runbook from the web service.&nbsp; Here is a SQL query to look up the runbook by name and every parameter that you would need to use the web service to start the runbook.<br /><br />Select lower(POLICIES.UniqueID) as RunbookID, lower(CUSTOM_START_PARAMETERS.UniqueID) as ParameterID, CUSTOM_START_PARAMETERS.value<br />From POLICIES<br />INNER JOIN OBJECTS&nbsp; on POLICIES.UniqueID = OBJECTS.ParentID<br />LEFT OUTER JOIN CUSTOM_START_PARAMETERS on OBJECTS.UniqueID = CUSTOM_START_PARAMETERS.ParentID<br />Where POLICIES.Name = 'My Runbook Name' and policies.deleted = 0<br /><br /><br />Note that the query uses the lower() function to force the guids to lowercase.&nbsp; This is required for the parameters when invoking a runbook or you will receive a 500 Internal Server Error.&nbsp; The runbook guid doesn't seem to matter if it's upper or lower case, but the parameters NEED to be in lowercase (bug??/feature??).<br /><br />This will return the PolicyID (RunbookID), Parameter guid, and the name required to start the runbook from the web service.

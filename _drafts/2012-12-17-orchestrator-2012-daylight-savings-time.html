@@ -1,0 +1,22 @@
+---
+layout: post
+title: Orchestrator 2012 - Daylight Savings Time Scheduling Issue
+date: '2012-12-17T09:15:00.001-08:00'
+author: Jon Mattivi
+tags:
+- Standard Activities
+- invoke
+- Orchestrator
+- schedule
+- activity
+- Daylight Savings Time
+- System Center Orchestrator 2012
+- runbook
+- start runbook
+- Monitor Date/Time
+modified_time: '2012-12-17T09:15:54.127-08:00'
+blogger_id: tag:blogger.com,1999:blog-603465820850819373.post-4980518690742153674
+blogger_orig_url: http://jmattivi.blogspot.com/2012/12/orchestrator-2012-daylight-savings-time.html
+---
+
+I'm running a little behind on this post as Daylight Savings Time here in the US was back on Sunday, <span style="white-space: nowrap;">November 4.&nbsp; For ease of example, all dates/times will reference the schedule for Daylight Savings in the United States.</span><br /><span style="white-space: nowrap;"><br /></span><span style="white-space: nowrap;">There is an issue with scheduling Runbooks that start with the Monitor Date/Time activity during DST.</span><br /><br />Daylight Saving Time (United States) 2012  began at  2:00 AM   on Sunday, <span style="white-space: nowrap;">March 11.&nbsp; At this time,&nbsp;</span><br /><span style="white-space: nowrap;">the clocks would be moved ahead one hour to 3:00 AM.</span><br /><ul><li><span style="white-space: nowrap;"><span style="background-color: yellow;">This means any Runbooks scheduled to run between the hours of&nbsp; 2:00 AM - 3:00 AM <span style="background-color: lime;">would be skipped entirely</span></span>.</span></li></ul><span style="white-space: nowrap;"><br /></span><br />Daylight Saving Time (United States) 2012 ended at  2:00 AM   on Sunday, <span style="white-space: nowrap;">November 4.&nbsp; At this time,&nbsp;</span><br /><span style="white-space: nowrap;">the clocks would be moved back one hour to 1:00 AM.</span><br /><ul><li><span style="background-color: yellow;"><span style="white-space: nowrap;">This means any Runbooks schedule to run between the hours of 1:00 AM - 2:00 AM</span> <span style="background-color: lime;">would run twice</span><span style="background-color: white;">.</span></span></li></ul><br />Depending on what the runbooks are executing, this could cause major issues and/or unscheduled downtime. It would also suggest Runbooks that are not set on an hourly interval (i.e. once daily) be scheduled outside of the hours of 1:00 AM - 3:00 AM to avoid any interruptions.&nbsp; Unless you throw an exception into the schedule to work around the timing that the clocks are changed.
