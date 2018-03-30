@@ -1,5 +1,5 @@
 ---
-title: "Legacy Posts"
+title: "Blogger Posts"
 permalink: /legacy/
 layout: collection
 collection: legacy
