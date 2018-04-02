@@ -1,6 +1,7 @@
 ---
 layout: single
 title: #Post Title
+excerpt: "Optimize the yaml"
 date: #'2012-06-02T04:33:00.002-07:00'
 modified_time: #'2012-06-08T09:52:51.150-07:00'
 toc: true
@@ -9,6 +10,9 @@ tags:
 - 
 - 
 - 
+image:
+  feature: banner.jpg
+  thumb: /path/toimage.png
 ---
 
 ### Headers

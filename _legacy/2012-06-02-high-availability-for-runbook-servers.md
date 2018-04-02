@@ -33,12 +33,12 @@ Tertiary:  myrunbookserver3;myrunbookserver1;myrunbookserver2
 ### Examples
 So for runbook servers interacting w/ servers on an internal domain you could use:
 
-![](http://jmattivi.files.wordpress.com/2012/05/var1.jpg?w=1000 "var1")
+![](/assets/images/2012-06-02-high-availability-for-runbook-servers/var1.jpg "var1")
 
 So for runbook servers interacting w/ servers on a dmz domain you could use:
 
-![](http://jmattivi.files.wordpress.com/2012/05/var2.jpg?w=1000 "var2")
+![](/assets/images/2012-06-02-high-availability-for-runbook-servers/var2.jpg "var2")
 
 Finally, subscribe to the variable in the Invoke Runbook activity.
 
-![](http://jmattivi.files.wordpress.com/2012/05/invoke.jpg?w=1000 "invoke")
+![](/assets/images/2012-06-02-high-availability-for-runbook-servers/invoke.jpg "invoke")
