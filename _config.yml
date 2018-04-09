@@ -133,7 +133,8 @@ author:
                      "PSConfigMgr",
                      "PSHoneywellThermostat",
                      "PSSFTP",
-                     "PSSSH"
+                     "PSSSH",
+                     "PSWindowsTasks"
                      ]
 
 
