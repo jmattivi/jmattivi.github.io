@@ -1,6 +1,12 @@
 ---
 layout: single
 title: "Hello World"
+excerpt: "Blogging....Take 2........"
+date: '2018-02-08T20:00:00'
+modified: '2018-02-08T20:00:00'
+classes: wide
+header:
+    teaser: /assets/images/2018-02-08-first-post/blah.jpg
 ---
 
 This is my first post on GitHub Pages!!!!
