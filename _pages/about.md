@@ -2,7 +2,6 @@
 layout: single
 title: "About Me...."
 permalink: /about/
-toc: true
 ---
 
 I am a Lead Systems Engineer in the healthcare industry.
